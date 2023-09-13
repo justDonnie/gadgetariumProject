@@ -14,8 +14,8 @@ public record CommentRequest(
     public Comment build() {
         Comment comment1 = new Comment();
         comment1.setComment(this.comment);
-        comment1.setCreatedAt(this.createdAt);
-        comment1.setUpdatedAt(this.updatedAt);
+        comment1.setCreatedAt(ZonedDateTime.now());
+        comment1.setUpdatedAt(ZonedDateTime.now());
         return comment1;
 
     }

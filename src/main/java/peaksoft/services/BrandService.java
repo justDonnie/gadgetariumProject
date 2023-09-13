@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface BrandService {
 
-    SimpleResponse saveBrand(BrandRequest brandRequest, Long productId);
+    SimpleResponse saveBrand(BrandRequest brandRequest);
 
-    List<BrandResponse> getAllBrands(Long productId);
+    List<BrandResponse> getAllBrands();
 
-    BrandResponse findBrandById(Long brandId,Long productId);
+    BrandResponse findBrandById(Long brandId);
 
-    BrandResponse updateBrand(Long brandId, BrandRequest brandRequest);
+    SimpleResponse updateBrand(Long brandId, BrandRequest brandRequest);
 
     SimpleResponse deleteBrand(Long brandId);
 

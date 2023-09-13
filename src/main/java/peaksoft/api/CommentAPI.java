@@ -32,22 +32,17 @@ public class CommentAPI {
         return commentService.getAllComments(productId);
     }
 
-    @PermitAll
+
     @GetMapping("/byId/{productId}/{commentId}")
     public CommentResponse getCommentByIdFromProduct(@PathVariable Long commentId,
                                                      @PathVariable Long productId){
         return commentService.findCommentById(commentId,productId);
     }
-    @PreAuthorize("hasAuthority('USER')")
-    @PutMapping("/update/{commentId}")
-    public CommentResponse updateComment(@PathVariable Long commentId,
-                                         @RequestBody CommentRequest commentRequest){
-        return commentService.updateComment(commentId,commentRequest);
-    }
-    @PreAuthorize("hasAuthority('USER')")
-    @DeleteMapping("/delete/{commentId}")
-    public SimpleResponse deleteComment(@PathVariable Long commentId){
-        return commentService.deleteComment(commentId);
+
+    @DeleteMapping("/delete/{commentId}/{productId}")
+    public SimpleResponse deleteComment(@PathVariable Long commentId,
+                                        @PathVariable Long productId){
+        return commentService.deleteComment(commentId,productId);
     }
 
 

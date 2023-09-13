@@ -16,7 +16,5 @@ public interface CommentService {
 
     CommentResponse findCommentById(Long commentId,Long productId);
 
-    CommentResponse updateComment(Long commentId, CommentRequest newCommentRequest);
-
-    SimpleResponse deleteComment(Long commentId);
+    SimpleResponse deleteComment(Long commentId,Long productId);
 }

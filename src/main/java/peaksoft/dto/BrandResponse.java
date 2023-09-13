@@ -8,8 +8,7 @@ import java.util.List;
 public record BrandResponse(
         Long id,
         String brandName,
-        String image,
-        List<Product> products) {
+        String image) {
     public BrandResponse {
     }
 }

@@ -32,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
         product.setImages(productRequest.images());
         product.setCharacteristic(productRequest.characteristic());
         product.setMadeIn(productRequest.madeIn());
+        product.setBrand(productRequest.brand());
         product.setCategory(productRequest.category());
         productRepository.save(product);
         log.info("Product with ID: "+product.getId()+" is successfully saved !!!");

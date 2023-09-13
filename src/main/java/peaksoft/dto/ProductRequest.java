@@ -21,6 +21,7 @@ public record ProductRequest(
        List<String>images,
        String characteristic,
        String madeIn,
+       Brand brand,
        Category category
 ) {
     public ProductRequest {

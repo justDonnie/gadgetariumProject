@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import peaksoft.dto.CommentRequest;
 import peaksoft.dto.CommentResponse;
 import peaksoft.dto.SimpleResponse;
+import peaksoft.exceptions.AccessDeniedException;
 import peaksoft.exceptions.BadCredentialException;
 import peaksoft.exceptions.NotFoundException;
 import peaksoft.models.Comment;
@@ -22,6 +23,7 @@ import peaksoft.services.CommentService;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -70,42 +72,37 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentResponse findCommentById(Long commentId, Long productId) {
-        return commentRepository.getCommentByIdFromProduct(commentId,productId)
-                .orElseThrow(()-> new NotFoundException("Input correct command, comment with ID: "+commentId+" is not found !!!"));
+        return commentRepository.getCommentByIdFromProduct(commentId, productId)
+                .orElseThrow(() -> new NotFoundException("Input correct command, comment with ID: " + commentId + " is not found !!!"));
     }
 
-    @Override
-    public CommentResponse updateComment(Long commentId, CommentRequest newCommentRequest) {
-        Comment comment = commentRepository
-                .findById(commentId)
-                .orElseThrow(() -> new NotFoundException("Input correct command, comment with ID: " + commentId + " is not found !!!"));
-        comment.setComment(newCommentRequest.comment());
-        comment.setUpdatedAt(ZonedDateTime.now());
-        commentRepository.save(comment);
-        log.info("Comment is successfully updated !!!");
-        return CommentResponse.builder()
-                .id(comment.getId())
-                .comment(comment.getComment())
-                .updatedAt(ZonedDateTime.now())
-                .build();
-    }
 
     @Override
-    public SimpleResponse deleteComment(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new NotFoundException("Input correct command, comment with ID: " + commentId + " is not found !!!"));
-        if (!commentRepository.existsById(commentId)){
-            throw new BadCredentialException("There are no any comment in database!!!");
+    public SimpleResponse deleteComment(Long commentId,Long productId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AccessDeniedException("Authentication required to delete a comment !!!");
         }
-//        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Input correct command, product with ID: " + productId + " is not found !!!"));
-//        if (!commentRepository.existsById(commentId)){
-//            throw new BadCredentialException("There are no any products in database!!!");
-//
-//            product.setComments(comment);
+        String email = authentication.getName();
+        User user = userRepository.getUserByEmail(email)
+                .orElseThrow(() -> new BadCredentialException("There are no any Users with email: " + email + " !!!"));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException("Comment with ID: " + commentId + " is not found !!!"));
+        if (!comment.getUser().equals(user)) {
+            throw new AccessDeniedException("You don't have permission to delete this comment.");
+        }
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("There are no any products in database with ID: " + productId + " !!!"));
+        if (!comment.getProduct().equals(product)) {
+            throw new AccessDeniedException("You don't have permission to delete this comment.");
+        }
+        product.getComments().remove(comment);
+        user.getComments().remove(comment);
         commentRepository.delete(comment);
+        log.info("Comment is successfully deleted !!!");
         return new SimpleResponse(
                 HttpStatus.OK,
-                "Comment with ID: "+commentId+" is successfully deleted !!!"
+                "Comment with ID: " + commentId + " is successfully deleted !!!"
         );
     }
 }

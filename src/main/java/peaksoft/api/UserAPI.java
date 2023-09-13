@@ -23,23 +23,26 @@ public class UserAPI {
 
     @PermitAll
     @GetMapping("/getAll")
-    public List<UserResponse> getAllUsers(){
+    public List<UserResponse> getAllUsers() {
         return userService.getAllUsers();
     }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/get/{userId}")
-    public UserResponse findUserById(@PathVariable Long userId){
+    public UserResponse findUserById(@PathVariable Long userId) {
         return userService.getUserById(userId);
     }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/update/{userId}")
     public SimpleResponse updateUser(@PathVariable Long userId,
-                                     @RequestBody UserRequest userRequest){
-        return userService.updateUser(userId,userRequest);
+                                     @RequestBody UserRequest userRequest) {
+        return userService.updateUser(userId, userRequest);
     }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/delete/{userId}")
-    public SimpleResponse deleteUserById(@PathVariable Long userId){
+    public SimpleResponse deleteUserById(@PathVariable Long userId) {
         return userService.deleteUser(userId);
     }
 
