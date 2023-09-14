@@ -5,9 +5,8 @@ import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import peaksoft.dto.ProductRequest;
-import peaksoft.dto.ProductResponse;
-import peaksoft.dto.SimpleResponse;
+import peaksoft.dto.*;
+import peaksoft.enums.Category;
 import peaksoft.services.ProductService;
 
 import java.util.List;
@@ -20,15 +19,22 @@ public class ProductAPI {
     private final ProductService productService;
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/save")
-    public SimpleResponse saveProduct(@RequestBody ProductRequest productRequest){
-        return productService.saveProduct(productRequest);
+    @PostMapping("/save/{brandId}")
+    public SimpleResponse saveProduct(@RequestBody ProductRequest productRequest,
+                                      @PathVariable Long brandId){
+        return productService.saveProduct(productRequest,brandId);
     }
 
     @PermitAll
     @GetMapping("/getAll")
     public List<ProductResponse>getAllProducts(){
         return productService.getAllProducts();
+    }
+
+    @PermitAll
+    @GetMapping("/findAll")
+    public List<GetAllResponse>findAll(){
+        return productService.findAllProducts();
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -51,8 +57,17 @@ public class ProductAPI {
         return  productService.deleteProduct(prodId);
     }
 
+
+    @PermitAll
+    @GetMapping("/sorted/{ascOrDesc}/{category}")
+    public List<ProductResponse>getProductByCategoryAndPrice(@PathVariable String ascOrDesc,
+                                                             @PathVariable Category category){
+        return productService.getProductByCategoryAndPrice(ascOrDesc,category);
+    }
+
+    @PermitAll
     @GetMapping("/getWithComment/{prodId}")
-    public ProductResponse getProductsWithComment(@PathVariable Long prodId){
+    public ProductWithCommentsResponse getProductWithComments(@PathVariable Long prodId){
         return productService.getProductWithComment(prodId);
     }
 

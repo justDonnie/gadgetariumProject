@@ -53,7 +53,6 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.save(comment1);
         log.info("Comment is successfully created !!!");
         return CommentResponse.builder()
-                .id(comment.getId())
                 .comment(comment.getComment())
                 .createdAt(ZonedDateTime.now())
                 .build();
@@ -89,12 +88,12 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException("Comment with ID: " + commentId + " is not found !!!"));
         if (!comment.getUser().equals(user)) {
-            throw new AccessDeniedException("You don't have permission to delete this comment.");
+            throw new AccessDeniedException("You don't have permission to delete this comment !!!");
         }
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("There are no any products in database with ID: " + productId + " !!!"));
         if (!comment.getProduct().equals(product)) {
-            throw new AccessDeniedException("You don't have permission to delete this comment.");
+            throw new AccessDeniedException("You don't have permission to delete this comment!!!");
         }
         product.getComments().remove(comment);
         user.getComments().remove(comment);

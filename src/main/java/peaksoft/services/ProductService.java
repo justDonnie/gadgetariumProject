@@ -1,16 +1,17 @@
 package peaksoft.services;
 
-import peaksoft.dto.ProductRequest;
-import peaksoft.dto.ProductResponse;
-import peaksoft.dto.SimpleResponse;
+import peaksoft.dto.*;
+import peaksoft.enums.Category;
 
 import java.util.List;
 
 public interface ProductService {
 
-    SimpleResponse saveProduct(ProductRequest productRequest);
+    SimpleResponse saveProduct(ProductRequest productRequest,Long brandId);
 
     List<ProductResponse> getAllProducts();
+
+    List<GetAllResponse> findAllProducts();
 
     ProductResponse findProductById(Long prodId);
 
@@ -18,5 +19,7 @@ public interface ProductService {
 
     SimpleResponse deleteProduct(Long productId);
 
-    ProductResponse getProductWithComment(Long productId);
+    List<ProductResponse> getProductByCategoryAndPrice(String ascOrDesc,Category category);
+
+    ProductWithCommentsResponse getProductWithComment(Long productId);
 }

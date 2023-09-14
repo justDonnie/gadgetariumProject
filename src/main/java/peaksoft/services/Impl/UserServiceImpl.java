@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import peaksoft.dto.SimpleResponse;
 import peaksoft.dto.UserRequest;
 import peaksoft.dto.UserResponse;
+import peaksoft.exceptions.BadCredentialException;
 import peaksoft.exceptions.NotFoundException;
 import peaksoft.models.User;
 import peaksoft.repositories.UserRepository;
@@ -61,10 +62,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public SimpleResponse deleteUser(Long userId) {
+        UserResponse response = userRepository.findUserById(userId).orElseThrow(() -> new NotFoundException("User with ID " + userId + " is not found!!!"));
         if (!userRepository.existsById(userId)){
             throw new NotFoundException("User with ID " + userId + " is not found!!!");
         }
-        userRepository.deleteById(userId);
+        if (!response.id().equals(1L)){
+            userRepository.deleteById(userId);
+        } else if (response.id().equals(1L)) {
+            throw new BadCredentialException("You don't have permission to delete the ADMIN!!!");
+        }
         log.info(" User is successfully deleted!!!");
         return new SimpleResponse(
                 HttpStatus.OK,

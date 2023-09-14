@@ -42,7 +42,7 @@ public class Comment {
             comment.setComment(this.comment);
             comment.setUser(this.user);
         }else {
-            throw  new RuntimeException("Feedbacks is null!!!");
+            throw  new RuntimeException("Comment is null!!!");
         }
 
     }

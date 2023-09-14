@@ -17,6 +17,5 @@ public record CommentRequest(
         comment1.setCreatedAt(ZonedDateTime.now());
         comment1.setUpdatedAt(ZonedDateTime.now());
         return comment1;
-
     }
 }

@@ -4,5 +4,5 @@ import peaksoft.dto.SimpleResponse;
 
 public interface FavoriteService {
 
-//    SimpleResponse createFav(Long productId,FavoriteRequest favoriteRequest);
+    SimpleResponse createFav(Long productId);
 }
