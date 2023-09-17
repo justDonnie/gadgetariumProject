@@ -48,6 +48,40 @@ public class FavoriteServiceImpl implements FavoriteService {
         favoriteRepository.save(favorite);
         return new SimpleResponse(
                 HttpStatus.OK,
-                "Like with ID: " + favorite.getId() + " is successfully dropped !!!");
+                user+" LIKED product with ID: " + favorite.getId() + " !!!");
     }
 }
+
+
+
+
+
+
+
+
+
+
+// @Override
+//    public SimpleResponse createFav(Long productId) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String email = authentication.getName();
+//        User user = userRepository.getUserByEmail(email).orElseThrow(() -> new NotFoundException("There no any User in database with email: " + email));
+//        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product with ID: " + productId + " is not found!!!"));
+//        List<Favorite> favorites=favoriteRepository.findAll();
+//        for (Favorite f: favorites) {
+//            if(f.getUser().equals(user) && f.getProduct().equals(product)){
+//                favoriteRepository.deleteById(f.getId());
+//                return new SimpleResponse(
+//                        HttpStatus.OK,
+//                        user+" LIKED product with ID: " + f.getId() + " !!!");
+//            }
+//        }
+//        Favorite favorite = new Favorite();
+//        favorite.setUser(user);
+//        favorite.setProduct(product);
+//        product.getFavorites().size();
+//        favoriteRepository.save(favorite);
+//        return new SimpleResponse(
+//                HttpStatus.OK,
+//                "Like with ID: " + favorite.getId() + " is successfully dropped !!!");
+//    }

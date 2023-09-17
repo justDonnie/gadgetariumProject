@@ -1,7 +1,6 @@
 package peaksoft.dto;
 
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import peaksoft.enums.Category;
@@ -14,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
+
 
 public class GetAllResponse {
     private Long id;
@@ -29,12 +28,11 @@ public class GetAllResponse {
     private List<Comment> comments;
     private List<Favorite>favorites;
 
-    public GetAllResponse(Long id, String name, BigDecimal price, String characteristic, boolean isFavorite, String madeIn, Category category) {
+    public GetAllResponse(Long id, String name, BigDecimal price, String characteristic, String madeIn, Category category) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.characteristic = characteristic;
-        this.isFavorite = isFavorite;
         this.madeIn = madeIn;
         this.category = category;
     }

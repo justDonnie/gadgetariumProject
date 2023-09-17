@@ -6,4 +6,5 @@ import peaksoft.models.Basket;
 
 @Repository
 public interface BasketRepository extends JpaRepository<Basket, Long> {
+
 }

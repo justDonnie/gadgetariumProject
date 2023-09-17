@@ -1,141 +1,129 @@
 package peaksoft.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import peaksoft.enums.Category;
-import peaksoft.models.Brand;
-import peaksoft.models.Comment;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class ProductResponse{
     private Long id;
+    private String brandName;
+    private String brandImage;
     private String name;
     private BigDecimal price;
     private List<String> images;
     private String characteristic;
-    private boolean isFavorite;
     private String madeIn;
     private Category category;
-    private Brand brand;
-    private String comment;
+    private List<String> comments;
+    private int countFavorite;
 
-    public ProductResponse(Long id, String name, BigDecimal price,String characteristic, boolean isFavorite, String madeIn, Category category) {
+    public ProductResponse(Long id, String name, BigDecimal price, String characteristic, String madeIn, Category category) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.characteristic = characteristic;
-        this.isFavorite = isFavorite;
         this.madeIn = madeIn;
         this.category = category;
     }
 
-    public ProductResponse(Long id, String name, BigDecimal price, String characteristic, boolean isFavorite, String madeIn, Category category, Brand brand) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.characteristic = characteristic;
-        this.isFavorite = isFavorite;
-        this.madeIn = madeIn;
-        this.category = category;
-        this.brand = brand;
-    }
-
-    public ProductResponse(Long id, String name, BigDecimal price, String characteristic, boolean isFavorite, String madeIn, Category category, Brand brand, String comment) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.characteristic = characteristic;
-        this.isFavorite = isFavorite;
-        this.madeIn = madeIn;
-        this.category = category;
-        this.brand = brand;
-        this.comment = comment;
-    }
-
-    public ProductResponse() {
-
-    }
-
-    public Long getId() {
-        return id;
+    public ProductResponse(String brandName, String brandImage) {
+        this.brandName = brandName;
+        this.brandImage = brandImage;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public void setBrandImage(String brandImage) {
+        this.brandImage = brandImage;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public List<String> getImages() {
-        return images;
     }
 
     public void setImages(List<String> images) {
         this.images = images;
     }
 
-    public String getCharacteristic() {
-        return characteristic;
-    }
-
     public void setCharacteristic(String characteristic) {
         this.characteristic = characteristic;
-    }
-
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
-    }
-
-    public String getMadeIn() {
-        return madeIn;
     }
 
     public void setMadeIn(String madeIn) {
         this.madeIn = madeIn;
     }
 
-    public Category getCategory() {
-        return category;
-    }
-
     public void setCategory(Category category) {
         this.category = category;
     }
 
-    public Brand getBrand() {
-        return brand;
+    public void setComments(List<String> comments) {
+        this.comments = comments;
     }
 
-    public void setBrand(Brand brand) {
-        this.brand = brand;
+    public void setCountFavorite(int countFavorite) {
+        this.countFavorite = countFavorite;
     }
 
-    public String getComment() {
-        return comment;
+    public Long getId() {
+        return id;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public String getBrandImage() {
+        return brandImage;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public String getCharacteristic() {
+        return characteristic;
+    }
+
+    public String getMadeIn() {
+        return madeIn;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public List<String> getComments() {
+        return comments;
+    }
+
+    public int getCountFavorite() {
+        return countFavorite;
     }
 }

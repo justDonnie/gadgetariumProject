@@ -14,7 +14,9 @@ import peaksoft.enums.Role;
 import peaksoft.exceptions.AlreadyExistException;
 import peaksoft.exceptions.BadCredentialException;
 import peaksoft.exceptions.NotFoundException;
+import peaksoft.models.Basket;
 import peaksoft.models.User;
+import peaksoft.repositories.BasketRepository;
 import peaksoft.repositories.UserRepository;
 import peaksoft.security.jwt.JwtService;
 import peaksoft.services.AuthenticationService;
@@ -29,6 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final BasketRepository basketRepository;
 
 
     @Override
@@ -39,14 +42,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     "User with email " + signUpRequest.email() + " is already exists!"
             );
         }
-        User user = User.builder()
-                .firstName(signUpRequest.firstName())
-                .lastName(signUpRequest.lastName())
-                .email(signUpRequest.email())
-                .password(passwordEncoder.encode(signUpRequest.password()))
-                .createdAt(ZonedDateTime.now())
-                .role(Role.USER)
-                .build();
+        User user = new User();
+        Basket basket = new Basket();
+
+        user.setFirstName(signUpRequest.firstName());
+        user.setLastName(signUpRequest.lastName());
+        user.setEmail(signUpRequest.email());
+        user.setPassword(passwordEncoder.encode(signUpRequest.password()));
+        user.setCreatedAt(ZonedDateTime.now());
+        user.setRole(Role.USER);
+        basket.setUser(user);
+
+        basketRepository.save(basket);
         userRepository.save(user);
         System.out.println("User with Id: "+user.getId()+" is successfully registered !!!");
         String token = jwtService.generateToken(user);

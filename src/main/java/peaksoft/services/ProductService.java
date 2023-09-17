@@ -11,8 +11,6 @@ public interface ProductService {
 
     List<ProductResponse> getAllProducts();
 
-    List<GetAllResponse> findAllProducts();
-
     ProductResponse findProductById(Long prodId);
 
     SimpleResponse updateProduct(Long productId, ProductRequest newProductRequest);
@@ -21,5 +19,5 @@ public interface ProductService {
 
     List<ProductResponse> getProductByCategoryAndPrice(String ascOrDesc,Category category);
 
-    ProductWithCommentsResponse getProductWithComment(Long productId);
+    ProductResponse findProductByComments(Long productId);
 }

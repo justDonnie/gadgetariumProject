@@ -62,7 +62,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public SimpleResponse deleteUser(Long userId) {
-        UserResponse response = userRepository.findUserById(userId).orElseThrow(() -> new NotFoundException("User with ID " + userId + " is not found!!!"));
+        UserResponse response = userRepository.findUserById(userId)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userId + " is not found!!!"));
         if (!userRepository.existsById(userId)){
             throw new NotFoundException("User with ID " + userId + " is not found!!!");
         }

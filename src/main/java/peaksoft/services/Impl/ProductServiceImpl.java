@@ -9,14 +9,12 @@ import peaksoft.dto.*;
 import peaksoft.enums.Category;
 import peaksoft.exceptions.NotFoundException;
 import peaksoft.models.Brand;
-import peaksoft.models.Comment;
 import peaksoft.models.Product;
 import peaksoft.repositories.BrandRepository;
 import peaksoft.repositories.CommentRepository;
 import peaksoft.repositories.ProductRepository;
 import peaksoft.services.ProductService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -52,30 +50,35 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> getAllProducts() {
-        return productRepository.getAllProducts();
-    }
-
-    @Override
-    public List<GetAllResponse> findAllProducts() {
-        List<GetAllResponse>allResponses = productRepository.findAllProduct();
-        for (GetAllResponse p:allResponses) {
-            if (p.getImages()==null){
-
-            }
+        List<ProductResponse>allResponses=productRepository.getAllProducts();
+        for (ProductResponse p :allResponses) {
+            p.setBrandName(productRepository.getBrandName(p.getId()));
+            p.setBrandImage(productRepository.getBrandImage(p.getId()));
+            p.setImages(productRepository.getImages(p.getId()));
+            p.setComments(productRepository.getComments(p.getId()));
+            productRepository.countFavorite(p.getId());
         }
-
-        return productRepository.findAllProduct();
+        return allResponses;
     }
 
 
+
     @Override
-    public ProductResponse findProductById(Long prodId) {
-        return productRepository.findProductById(prodId)
-                .orElseThrow(() -> {
-                    String massage = "Product with ID : " + prodId + " is not found!";
-                    log.error(massage);
-                    return new NotFoundException(massage);
-                });
+    public ProductResponse findProductById(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("There are no any products in database with ID: " + productId));
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setBrandName(productRepository.getBrandName(productId));
+        productResponse.setBrandImage(productRepository.getBrandImage(productId));
+        productResponse.setName(product.getName());
+        productResponse.setPrice(product.getPrice());
+        productResponse.setImages(productRepository.getImages(productId));
+        productResponse.setCharacteristic(product.getCharacteristic());
+        productResponse.setMadeIn(product.getMadeIn());
+        productResponse.setCategory(product.getCategory());
+        productResponse.setComments(productRepository.getComments(productId));
+        productResponse.setCountFavorite(productRepository.countFavorite(productId));
+        return productResponse;
     }
 
     @Override
@@ -114,11 +117,27 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> getProductByCategoryAndPrice(String ascOrDesc, Category category) {
-        if (ascOrDesc.equalsIgnoreCase("asc")||(ascOrDesc.equalsIgnoreCase("desc"))){
-            if (ascOrDesc.equalsIgnoreCase("asc")){
-                return productRepository.getProductByCategoryAndPriceAsc(category);
+        if (ascOrDesc.equalsIgnoreCase("asc") || (ascOrDesc.equalsIgnoreCase("desc"))) {
+            if (ascOrDesc.equalsIgnoreCase("asc")) {
+                List<ProductResponse> allProducts = productRepository.getProductByCategoryAndPriceDesc(category);
+                for (ProductResponse p : allProducts) {
+                    p.setBrandName(productRepository.getBrandName(p.getId()));
+                    p.setBrandImage(productRepository.getBrandImage(p.getId()));
+                    p.setImages(productRepository.getImages(p.getId()));
+                    p.setComments(productRepository.getComments(p.getId()));
+                    productRepository.countFavorite(p.getId());
+                }
+                return allProducts;
             } else if (ascOrDesc.equalsIgnoreCase("desc")) {
-                return productRepository.getProductByCategoryAndPriceDesc(category);
+                List<ProductResponse> allProducts = productRepository.getProductByCategoryAndPriceAsc(category);
+                for (ProductResponse p : allProducts) {
+                    p.setBrandName(productRepository.getBrandName(p.getId()));
+                    p.setBrandImage(productRepository.getBrandImage(p.getId()));
+                    p.setImages(productRepository.getImages(p.getId()));
+                    p.setComments(productRepository.getComments(p.getId()));
+                    productRepository.countFavorite(p.getId());
+                }
+                return allProducts;
             }
         }else {
             throw new NotFoundException("Input the correct command !!!");
@@ -126,28 +145,22 @@ public class ProductServiceImpl implements ProductService {
         return null;
     }
 
-
     @Override
-    public ProductWithCommentsResponse getProductWithComment(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() ->
-                new NotFoundException("Product with id: " + productId + " is not found"));
-
+    public ProductResponse findProductByComments(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("There are no any products in database with ID: " + productId));
         ProductResponse productResponse = new ProductResponse();
-        productResponse.setId(product.getId());
+        productResponse.setBrandName(productRepository.getBrandName(productId));
+        productResponse.setBrandImage(productRepository.getBrandImage(productId));
         productResponse.setName(product.getName());
         productResponse.setPrice(product.getPrice());
+        productResponse.setImages(productRepository.getImages(productId));
         productResponse.setCharacteristic(product.getCharacteristic());
-        productResponse.setFavorite(product.isFavorite());
         productResponse.setMadeIn(product.getMadeIn());
-        productResponse.setBrand(product.getBrand());
         productResponse.setCategory(product.getCategory());
-        List<Comment> comments = commentRepository.findAllByProductId(productId);
-        ProductWithCommentsResponse response = new ProductWithCommentsResponse(productResponse, comments);
-        return ProductWithCommentsResponse.builder()
-                .comments(response.getComments())
-                .productResponse(response.getProductResponse())
-                .build();
+        productResponse.setComments(productRepository.getComments(productId));
+        productResponse.setCountFavorite(productRepository.countFavorite(productId));
+        return productResponse;
+
     }
-
-
 }

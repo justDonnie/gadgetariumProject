@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import peaksoft.dto.CommentRequest;
 import peaksoft.dto.CommentResponse;
 import peaksoft.dto.SimpleResponse;
+import peaksoft.enums.Role;
 import peaksoft.exceptions.AccessDeniedException;
 import peaksoft.exceptions.BadCredentialException;
 import peaksoft.exceptions.NotFoundException;
@@ -37,9 +38,15 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentResponse createComment(CommentRequest commentRequest, Long productId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AccessDeniedException("Authentication required to create a comment !!!");
+        }
         String email = authentication.getName();
         User user = userRepository.getUserByEmail(email)
                 .orElseThrow(() -> new BadCredentialException("There are no any Users with email: " + email + " !!!"));
+        if (user.getRole().equals(Role.ADMIN)){
+            throw new AccessDeniedException("Authentication required to be USER to create a comment !!!");
+        }
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product with ID: " + productId + " is not found !!!"));
         Comment comment = new Comment();

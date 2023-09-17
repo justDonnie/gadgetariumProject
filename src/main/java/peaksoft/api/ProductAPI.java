@@ -31,11 +31,6 @@ public class ProductAPI {
         return productService.getAllProducts();
     }
 
-    @PermitAll
-    @GetMapping("/findAll")
-    public List<GetAllResponse>findAll(){
-        return productService.findAllProducts();
-    }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/findById/{prodId}")
@@ -67,8 +62,8 @@ public class ProductAPI {
 
     @PermitAll
     @GetMapping("/getWithComment/{prodId}")
-    public ProductWithCommentsResponse getProductWithComments(@PathVariable Long prodId){
-        return productService.getProductWithComment(prodId);
+    public ProductResponse findProductByComments(@PathVariable Long prodId){
+        return productService.findProductByComments(prodId);
     }
 
 }

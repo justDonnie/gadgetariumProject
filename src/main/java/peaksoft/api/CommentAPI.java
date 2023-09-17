@@ -26,19 +26,20 @@ public class CommentAPI {
         return commentService.createComment(commentRequest,productId);
     }
 
-    @PreAuthorize("hasAuthority('USER')")
+    @PermitAll
     @GetMapping("/getAll/{productId}")
     public List<CommentResponse> getAllCommentsOfProducts(@PathVariable Long productId){
         return commentService.getAllComments(productId);
     }
 
-
+    @PermitAll
     @GetMapping("/byId/{productId}/{commentId}")
-    public CommentResponse getCommentByIdFromProduct(@PathVariable Long commentId,
-                                                     @PathVariable Long productId){
+    public CommentResponse getCommentByIdFromProduct(@PathVariable Long productId,
+                                                     @PathVariable Long commentId){
         return commentService.findCommentById(commentId,productId);
     }
 
+    @PermitAll
     @DeleteMapping("/delete/{commentId}/{productId}")
     public SimpleResponse deleteComment(@PathVariable Long commentId,
                                         @PathVariable Long productId){
